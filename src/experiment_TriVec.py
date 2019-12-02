@@ -91,7 +91,7 @@ def main():
 
     print("Initializing the knowledge graph embedding model... ")
     # model pipeline definition
-    model = TriModel_MCL(seed=seed, verbose=3)
+    model = TriModel_MCL(seed=seed, verbose=2)
     pipe_model = Pipeline([('kge_model', model)])
 
     # set model parameters
