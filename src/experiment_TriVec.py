@@ -21,6 +21,7 @@ def main():
     se_map_raw = [l.strip().split("\t") for l in open(os.path.join(kg_dp_path, "se_maps.txt")).readlines()]
     se_mapping = {"SE:%s" % k: v for k, v in se_map_raw}
 
+    print("Importing dataset files ... ")
     benchmark_train_fd = gzip.open(os.path.join(kg_dp_path, "ploypharmacy_facts_train.txt.gz"), "rt")
     benchmark_valid_fd = gzip.open(os.path.join(kg_dp_path, "ploypharmacy_facts_valid.txt.gz"), "rt")
     benchmark_test_fd = gzip.open(os.path.join(kg_dp_path, "ploypharmacy_facts_test.txt.gz"), "rt")
@@ -55,6 +56,7 @@ def main():
 
     drug_combinations = np.array([[d1, d2] for d1, d2 in list(itertools.product(pse_drugs, pse_drugs)) if d1 != d2])
 
+    print("Processing dataset files to generate a knowledge graph ... ")
     # delete raw polypharmacy data
     del benchmark_triples
     dataset = KgDataset(name=data_name)
@@ -88,6 +90,7 @@ def main():
     test_data = dataset.data["bench_test"]["X"]
     train_data = np.concatenate([dataset.data["base_train"]["X"], dataset.data["bench_train"]["X"]])
 
+    print("Initializing the knowledge graph embedding model... ")
     # model pipeline definition
     model = TriModel_MCL(seed=seed, verbose=1)
     pipe_model = Pipeline([('srl_model', model)])

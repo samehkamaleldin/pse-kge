@@ -68,7 +68,7 @@ def main():
 
     nb_entities = dataset.get_ents_count()
     nb_relations = dataset.get_rels_count()
-    pse_indices = dataset.get_rel_indices(list(pse_list))
+    pse_indices = [dataset.rel_mappings[l] for l in pse_list]
 
     d1 = np.array(dataset.get_ent_indices(list(drug_combinations[:, 0]))).reshape([-1, 1])
     d2 = np.array(dataset.get_ent_indices(list(drug_combinations[:, 1]))).reshape([-1, 1])
