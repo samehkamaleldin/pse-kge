@@ -92,26 +92,26 @@ def main():
     print("Initializing the knowledge graph embedding model... ")
     # model pipeline definition
     model = TriModel_MCL(seed=seed, verbose=1)
-    pipe_model = Pipeline([('srl_model', model)])
+    pipe_model = Pipeline([('kge_model', model)])
 
     # set model parameters
     model_params = {
-        'srl_model__k_dim': 10,
-        'srl_model__lr': 0.01,
-        'srl_model__optimizer': "AMSgrad",
-        'srl_model__lmbda': 0.03,
-        'srl_model__dropout': 0.2,
-        'srl_model__log_interval': 10,
-        'srl_model__nb_epochs': 2,
-        'srl_model__batch_size': 5000,
-        'srl_model__initializer': 'xavier_uniform',
-        'srl_model__nb_ents': nb_entities,
-        'srl_model__nb_rels': nb_relations
+        'kge_model__em_size': 100,
+        'kge_model__lr': 0.01,
+        'kge_model__optimizer': "AMSgrad",
+        'kge_model__reg_wt': 0.03,
+        'kge_model__dropout': 0.2,
+        'kge_model__log_interval': 10,
+        'kge_model__nb_epochs': 100,
+        'kge_model__batch_size': 5000,
+        'kge_model__initialiser': 'xavier_uniform',
+        'kge_model__nb_ents': nb_entities,
+        'kge_model__nb_rels': nb_relations
     }
 
     # add parameters to the model then call fit method
     pipe_model.set_params(**model_params)
-    pipe_model.fit(X=train_data, y=None, srl_model__valid_data=None, srl_model__nb_epochs_iter=nb_epochs_then_check)
+    pipe_model.fit(X=train_data)
 
     metrics_per_se = {se_idx: {"ap": .0, "auc-roc": .0, "auc-pr": .0, "p@50": .0} for se_idx in pse_indices}
 
