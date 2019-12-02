@@ -91,7 +91,7 @@ def main():
 
     print("Initializing the knowledge graph embedding model... ")
     # model pipeline definition
-    model = TriModel_MCL(seed=seed, verbose=1)
+    model = TriModel_MCL(seed=seed, verbose=3)
     pipe_model = Pipeline([('kge_model', model)])
 
     # set model parameters
@@ -111,6 +111,8 @@ def main():
 
     # add parameters to the model then call fit method
     pipe_model.set_params(**model_params)
+
+    print("Training ... ")
     pipe_model.fit(X=train_data)
 
     metrics_per_se = {se_idx: {"ap": .0, "auc-roc": .0, "auc-pr": .0, "p@50": .0} for se_idx in pse_indices}
