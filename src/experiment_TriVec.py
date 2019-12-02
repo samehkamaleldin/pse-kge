@@ -8,13 +8,12 @@ from sklearn.pipeline import Pipeline
 from tqdm import tqdm
 from libkge.embedding import TransE, DistMult_MCL, ComplEx_MCL, TriModel_MCL
 from libkge import KgDataset
-from libkge.metrics.classification import auc_roc, auc_pr
-from libkge.metrics.ranking import precision_at_k, average_precision
 
+from libkge.metrics.ranking import precision_at_k, average_precision
+from sklearn.metrics.ranking import roc_auc_score, average_precision_score
 
 def main():
     seed = 1234
-    nb_epochs_then_check = None
     data_name = "pse"
     kg_dp_path = "../data/"
 
@@ -143,8 +142,9 @@ def main():
 
         se_ap = average_precision(se_test_facts_labels, se_test_facts_scores)
         se_p50 = precision_at_k(se_test_facts_labels, se_test_facts_scores, k=50)
-        se_auc_pr = auc_pr(se_test_facts_labels, se_test_facts_scores)
-        se_auc_roc = auc_roc(se_test_facts_labels, se_test_facts_scores)
+
+        se_auc_pr = roc_auc_score(se_test_facts_labels, se_test_facts_scores)
+        se_auc_roc = average_precision_score(se_test_facts_labels, se_test_facts_scores)
 
         se_ap_list.append(se_ap)
         se_auc_roc_list.append(se_auc_roc)
@@ -153,8 +153,8 @@ def main():
 
         se_code = se_name.replace("SE:", "")
         metrics_per_se[se] = {"ap": se_ap, "auc-roc": se_auc_roc, "auc-pr": se_auc_pr, "p@50": se_p50}
-        print("AP: %1.4f - AUC-ROC: %1.4f - AUC-PR: %1.4f - P@50: %1.4f > %s: %s" %
-              (se_ap, se_auc_roc, se_auc_pr, se_p50, se_code, se_mapping[se_code]), flush=True)
+        print("AP: %1.4f - AUC-ROC: %1.4f - AUC-PR: %1.4f - P@50: %1.4f > %s (%-10d): %s" %
+              (se_ap, se_auc_roc, se_auc_pr, se_p50, se_code, se_test_facts_pos_size, se_mapping[se_code]), flush=True)
 
     se_ap_list_avg = np.average(se_ap_list)
     se_auc_roc_list_avg = np.average(se_auc_roc_list)
