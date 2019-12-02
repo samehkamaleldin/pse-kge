@@ -79,9 +79,9 @@ def main():
     del d2
 
     # grouping side effect information by the side effect type
-    train_data = dataset.data["bench_train"]["X"]
-    valid_data = dataset.data["bench_valid"]["X"]
-    test_data = dataset.data["bench_test"]["X"]
+    train_data = dataset.data["bench_train"]
+    valid_data = dataset.data["bench_valid"]
+    test_data = dataset.data["bench_test"]
 
     bench_idx_data = np.concatenate([train_data, valid_data, test_data])
     se_facts_full_dict = {se: set() for se in pse_indices}
