@@ -98,7 +98,7 @@ def main():
     model_params = {
         'kge_model__em_size': 100,
         'kge_model__lr': 0.01,
-        'kge_model__optimizer': "AMSgrad",
+        'kge_model__optimiser': "AMSgrad",
         'kge_model__reg_wt': 0.03,
         'kge_model__dropout': 0.2,
         'kge_model__log_interval': 10,
