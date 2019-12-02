@@ -21,6 +21,7 @@ def main():
     se_map_raw = [l.strip().split("\t") for l in open(os.path.join(kg_dp_path, "se_maps.txt")).readlines()]
     se_mapping = {"SE:%s" % k: v for k, v in se_map_raw}
 
+    print("Importing dataset files ... ")
     benchmark_train_fd = gzip.open(os.path.join(kg_dp_path, "ploypharmacy_facts_train.txt.gz"), "rt")
     benchmark_valid_fd = gzip.open(os.path.join(kg_dp_path, "ploypharmacy_facts_valid.txt.gz"), "rt")
     benchmark_test_fd = gzip.open(os.path.join(kg_dp_path, "ploypharmacy_facts_test.txt.gz"), "rt")
@@ -55,6 +56,7 @@ def main():
 
     drug_combinations = np.array([[d1, d2] for d1, d2 in list(itertools.product(pse_drugs, pse_drugs)) if d1 != d2])
 
+    print("Processing dataset files to generate a knowledge graph ... ")
     # delete raw polypharmacy data
     del benchmark_triples
     dataset = KgDataset(name=data_name)
@@ -68,7 +70,7 @@ def main():
 
     nb_entities = dataset.get_ents_count()
     nb_relations = dataset.get_rels_count()
-    pse_indices = [dataset.rel_mappings[l] for l in pse_list]
+    pse_indices = dataset.get_rel_indices(list(pse_list))
 
     d1 = np.array(dataset.get_ent_indices(list(drug_combinations[:, 0]))).reshape([-1, 1])
     d2 = np.array(dataset.get_ent_indices(list(drug_combinations[:, 1]))).reshape([-1, 1])
@@ -77,17 +79,17 @@ def main():
     del d2
 
     # grouping side effect information by the side effect type
-    bench_idx_data = np.concatenate(
-        [dataset.data["bench_train"]["X"],
-         dataset.data["bench_valid"]["X"],
-         dataset.data["bench_test"]["X"]])
+    train_data = dataset.data["bench_train"]["X"]
+    valid_data = dataset.data["bench_valid"]["X"]
+    test_data = dataset.data["bench_test"]["X"]
+
+    bench_idx_data = np.concatenate([train_data, valid_data, test_data])
     se_facts_full_dict = {se: set() for se in pse_indices}
+
     for s, p, o in bench_idx_data:
         se_facts_full_dict[p].add((s, p, o))
 
-    test_data = dataset.data["bench_test"]["X"]
-    train_data = np.concatenate([dataset.data["base_train"]["X"], dataset.data["bench_train"]["X"]])
-
+    print("Initializing the knowledge graph embedding model... ")
     # model pipeline definition
     model = TransE(seed=seed, verbose=1)
     pipe_model = Pipeline([('srl_model', model)])
@@ -117,7 +119,7 @@ def main():
     se_p50_list = []
 
     print("================================================================================")
-    for se in tqdm(pse_indices, desc="Evaluation per side-effect"):
+    for se in tqdm(pse_indices, desc="Evaluating test data for each side-effect"):
         se_name = dataset.get_rel_labels([se])[0]
         se_all_facts_set = se_facts_full_dict[se]
         se_test_facts_pos = np.array([[s, p, o] for s, p, o in test_data if p == se])
