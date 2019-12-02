@@ -19,7 +19,7 @@ def main():
     kg_dp_path = "../data/"
 
     se_map_raw = [l.strip().split("\t") for l in open(os.path.join(kg_dp_path, "se_maps.txt")).readlines()]
-    se_mapping = {"SE:%s" % k: v for k, v in se_map_raw}
+    se_mapping = {k: v for k, v in se_map_raw}
 
     print("Importing dataset files ... ")
     benchmark_train_fd = gzip.open(os.path.join(kg_dp_path, "ploypharmacy_facts_train.txt.gz"), "rt")
