@@ -1,7 +1,7 @@
 # Predicting Polypharmacy side-effects using KGE models
 
 ## Overview
-This code contain scripts and data for and AMIA Informatics summit 2020 paper submission which studies the prediction of polypharmacy side-effects using knowledge graph embeddings.
+This code contain scripts and data for experiments on the prediction of polypharmacy side-effects using knowledge graph embeddings.
 
 ## Requirements
 This repository only require the installation of `tensorflow` (standard or gpu) and the [LibKGE library](https://github.com/samehkamaleldin/libkge). 
@@ -1018,17 +1018,4 @@ AP: 0.9677 - AUC-ROC: 0.9677 - AUC-PR: 0.9794 - P@50: 0.9800 > C0024894: breast 
 ================================================================================
 [AVERAGE] AP: 0.9234 - AUC-ROC: 0.9234 - AUC-PR: 0.9500 - P@50: 0.9320
 ================================================================================
-```
-
-## Citation
-If you use the code or the dataset in this repository, please cite the following study
-```
-@article{MohamedAMIA20PSE,
-  title={Predicting Polypharmacy Side-effects Using Knowledge Graph Embeddings.},
-  author={Sameh K. Mohamed and Vit Novacek},
-  journal={AMIA Joint Summits on Translational Science proceedings. AMIA Joint Summits on Translational Science},
-  year={2020},
-  volume={2020},
-  pages={?-?}
-}
 ```
