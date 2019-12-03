@@ -10,12 +10,11 @@ from libkge.embedding import TransE, DistMult, ComplEx, TriModel, DistMult_MCL, 
 from libkge import KgDataset
 from libkge.metrics.classification import auc_roc, auc_pr
 from libkge.metrics.ranking import precision_at_k, average_precision
-from sklearn.metrics.ranking import roc_auc_score, average_precision_score
+from libkge.metrics.classification import auc_pr, auc_roc
 
 
 def main():
     seed = 1234
-    nb_epochs_then_check = None
     data_name = "pse"
     kg_dp_path = "../data/"
 
@@ -143,8 +142,8 @@ def main():
 
         se_ap = average_precision(se_test_facts_labels, se_test_facts_scores)
         se_p50 = precision_at_k(se_test_facts_labels, se_test_facts_scores, k=50)
-        se_auc_pr = roc_auc_score(se_test_facts_labels, se_test_facts_scores)
-        se_auc_roc = average_precision_score(se_test_facts_labels, se_test_facts_scores)
+        se_auc_pr = auc_pr(se_test_facts_labels, se_test_facts_scores)
+        se_auc_roc = auc_roc(se_test_facts_labels, se_test_facts_scores)
 
         se_ap_list.append(se_ap)
         se_auc_roc_list.append(se_auc_roc)
